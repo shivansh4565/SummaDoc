@@ -67,13 +67,16 @@ export default function PdfMergeUploader() {
         className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
           isDragging ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-300 dark:border-gray-700'
         }`}
-        onDragOver={e => {
+        onDragOver={(e: React.DragEvent<HTMLDivElement>) => {
           e.preventDefault();
           setIsDragging(true);
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => {
+          const input = inputRef.current;
+          if (input) input.click();
+        }}
         style={{ cursor: 'pointer' }}
       >
         <FiUpload className="w-12 h-12 mx-auto mb-4 text-blue-500" />
@@ -87,9 +90,10 @@ export default function PdfMergeUploader() {
           accept="application/pdf"
           multiple
           className="hidden"
-          onChange={e => handleFiles(e.target.files)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFiles(e.target.files)}
         />
       </div>
+
       {files.length > 0 && (
         <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow p-4">
           <h4 className="font-semibold mb-2">Selected PDFs:</h4>
@@ -99,7 +103,7 @@ export default function PdfMergeUploader() {
                 <span className="truncate max-w-xs">{file.name}</span>
                 <button
                   className="text-red-500 hover:text-red-700 ml-2"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
                     handleRemove(idx);
                   }}
@@ -119,6 +123,7 @@ export default function PdfMergeUploader() {
           </button>
         </div>
       )}
+
       {error && <div className="mt-4 text-red-600 text-center">{error}</div>}
     </div>
   );
