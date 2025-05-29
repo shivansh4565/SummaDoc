@@ -50,8 +50,12 @@ export default function PdfMergeUploader() {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-    } catch (err: any) {
-      setError(err.message || 'An error occurred.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
     } finally {
       setLoading(false);
     }
@@ -118,4 +122,4 @@ export default function PdfMergeUploader() {
       {error && <div className="mt-4 text-red-600 text-center">{error}</div>}
     </div>
   );
-} 
+}
